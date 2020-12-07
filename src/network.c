@@ -264,6 +264,7 @@ network make_network(int n)
 void forward_network(network net, network_state state)
 {
     state.workspace = net.workspace;
+    // 逐層循環進行前向推理
     int i;
     for(i = 0; i < net.n; ++i){
         state.index = i;
@@ -335,9 +336,10 @@ void backward_network(network net, network_state state)
     float *original_input = state.input;
     float *original_delta = state.delta;
     state.workspace = net.workspace;
+    // 从后到前逐层反向传播
     for(i = net.n-1; i >= 0; --i){
         state.index = i;
-        if(i == 0){
+        if(i == 0){ // 已经反向传播到第一层，不再需要获取前一层
             state.input = original_input;
             state.delta = original_delta;
         }else{
@@ -345,9 +347,11 @@ void backward_network(network net, network_state state)
             state.input = prev.output;
             state.delta = prev.delta;
         }
+        // 获取当前层
         layer l = net.layers[i];
         if (l.stopbackward) break;
         if (l.onlyforward) continue;
+        // 对当前层反向传播
         l.backward(l, state);
     }
 }

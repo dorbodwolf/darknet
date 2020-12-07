@@ -39,20 +39,25 @@ void *list_pop(list *l){
     return val;
 }
 
+/*
+ * 将一个新变量插入到list链表的一个节点中
+ * \param:l     链表
+ * \param:val   插入的对象
+ */
 void list_insert(list *l, void *val)
 {
     node* newnode = (node*)xmalloc(sizeof(node));
-    newnode->val = val;
+    newnode->val = val; //node变量的空指针指向val
     newnode->next = 0;
 
-    if(!l->back){
-        l->front = newnode;
-        newnode->prev = 0;
-    }else{
-        l->back->next = newnode;
-        newnode->prev = l->back;
+    if(!l->back){ // 在list的首节点插入
+        l->front = newnode; // list的首节点指针指向newnode
+        newnode->prev = 0; //首节点没有前向节点
+    }else{ //插入list的普通节点
+        l->back->next = newnode; // list的下一个节点指向newnode
+        newnode->prev = l->back; // newnode的前向节点指向list当前节点
     }
-    l->back = newnode;
+    l->back = newnode; //list的当前节点更新为newnode
     ++l->size;
 }
 

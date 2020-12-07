@@ -1,0 +1,619 @@
+{
+    "root": {
+        "data": {
+            "id": "c7js6w09k480",
+            "created": 1607062725299,
+            "text": "darknet框架源码",
+            "progress": null,
+            "expandState": "expand"
+        },
+        "children": [
+            {
+                "data": {
+                    "id": "c7m8kfiu0i00",
+                    "created": 1607312044187,
+                    "text": "解析配置文件到链表中",
+                    "priority": 1,
+                    "expandState": "expand",
+                    "layout": null
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "c7ko59qtfbs0",
+                            "created": 1607152873992,
+                            "text": "数据结构定义",
+                            "layout": null
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "c7ko6d96jg00",
+                                    "created": 1607152959997,
+                                    "text": "list.h",
+                                    "layout": null
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "c7ko6rj3w2g0",
+                                            "created": 1607152991072,
+                                            "text": "list类型\n保存所有网络参数",
+                                            "layout": null,
+                                            "background": "transparent"
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "c7m70q4h16w0",
+                                                    "created": 1607307678870,
+                                                    "text": "int size\n节点个数",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            },
+                                            {
+                                                "data": {
+                                                    "id": "c7m70uylasg0",
+                                                    "created": 1607307689398,
+                                                    "text": "node *front\n首节点",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            },
+                                            {
+                                                "data": {
+                                                    "id": "c7m70zd39s80",
+                                                    "created": 1607307698982,
+                                                    "text": "node *back\n首节点外的当前节点",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "data": {
+                                            "id": "c7ko6uhhkdc0",
+                                            "created": 1607152997504,
+                                            "text": "node类型\nlist中的节点表示",
+                                            "layout": null
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "c7m72uv9nqo0",
+                                                    "created": 1607307845926,
+                                                    "text": "void *val",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            },
+                                            {
+                                                "data": {
+                                                    "id": "c7m73a3epi80",
+                                                    "created": 1607307879070,
+                                                    "text": "struct node *next",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            },
+                                            {
+                                                "data": {
+                                                    "id": "c7m73f7ua6o0",
+                                                    "created": 1607307890222,
+                                                    "text": "struct node *prev",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data": {
+                                    "id": "c7ko9mbo9z40",
+                                    "created": 1607153214831,
+                                    "text": "parser.c",
+                                    "layout": null
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "c7ko9yo13oo0",
+                                            "created": 1607153241699,
+                                            "text": "section类型",
+                                            "layout": null
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "c7m6ahs2eb40",
+                                                    "created": 1607305623237,
+                                                    "text": "char *type",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            },
+                                            {
+                                                "data": {
+                                                    "id": "c7m6ao1rzc00",
+                                                    "created": 1607305636885,
+                                                    "text": "list *options",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data": {
+                                    "id": "c7kocutwgjk0",
+                                    "created": 1607153468440,
+                                    "text": "option_list.h",
+                                    "layout": null
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "c7kocyz6kuw0",
+                                            "created": 1607153477466,
+                                            "text": "kvp类型",
+                                            "layout": null
+                                        },
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "c7m8kmi1i000",
+                            "created": 1607312059377,
+                            "text": "parser.c",
+                            "layout": null
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "c7m8kt54j7c0",
+                                    "created": 1607312073833,
+                                    "text": "list *read_cfg(char *filename)",
+                                    "layout": null
+                                },
+                                "children": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "c7m8uoukky80",
+                    "created": 1607312848129,
+                    "text": "将链表中的网络配置内容解析到结构体中，\n来实现O(1)时间复杂度的读取操作性能。",
+                    "priority": 2,
+                    "layout": null
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "c7mfbdjlsao0",
+                            "created": 1607331082372,
+                            "text": "数据结构定义",
+                            "expandState": "expand",
+                            "layout": null
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "c7mdacxpl5k0",
+                                    "created": 1607325360464,
+                                    "text": "darknet.h",
+                                    "layout": null
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "c7mdaf0356o0",
+                                            "created": 1607325364961,
+                                            "text": "network类型\n是模型结构存放的地方",
+                                            "layout": null
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "c7mg6f7t35k0",
+                                                    "created": 1607333515301,
+                                                    "text": "layer *layers",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "c7m8w4z2pxk0",
+                            "created": 1607312961594,
+                            "text": "parser.c",
+                            "layout": null
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "c7m8wb3zwj40",
+                                    "created": 1607312974953,
+                                    "text": "parse_network_cfg(char *filename)",
+                                    "layout": null
+                                },
+                                "children": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "c7md9u7mlqo0",
+                    "created": 1607325319705,
+                    "text": "加载训练数据",
+                    "priority": 3,
+                    "layout": null
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "c7mfati9h800",
+                            "created": 1607331038755,
+                            "text": "数据结构定义",
+                            "expandState": "expand",
+                            "layout": null
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "c7meae16g8g0",
+                                    "created": 1607328183960,
+                                    "text": "darknet.h",
+                                    "layout": null
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "c7meai2trco0",
+                                            "created": 1607328192767,
+                                            "text": "data类型\n训练数据存放的地方",
+                                            "layout": null
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "c7med52wa340",
+                                                    "created": 1607328399566,
+                                                    "text": "int shallow",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            },
+                                            {
+                                                "data": {
+                                                    "id": "c7mf8vq23sg0",
+                                                    "created": 1607330886852,
+                                                    "text": "matrix X",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            },
+                                            {
+                                                "data": {
+                                                    "id": "c7mf8z8ezds0",
+                                                    "created": 1607330894492,
+                                                    "text": "matrix y",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "data": {
+                                            "id": "c7mf8qku8wo0",
+                                            "created": 1607330875652,
+                                            "text": "matrix类型",
+                                            "layout": null
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "c7mf99rgp5s0",
+                                                    "created": 1607330917412,
+                                                    "text": "int rows,cols",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            },
+                                            {
+                                                "data": {
+                                                    "id": "c7mf9cvimyg0",
+                                                    "created": 1607330924187,
+                                                    "text": "float **val",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "c7md9xlpg800",
+                            "created": 1607325327086,
+                            "text": "data.c",
+                            "layout": null
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "c7mdb742q2g0",
+                                    "created": 1607325426152,
+                                    "text": "load_data(args)",
+                                    "layout": null
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "c7mdbc4q7hc0",
+                                            "created": 1607325437076,
+                                            "text": "load_threads(*ptr)",
+                                            "layout": null
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "c7mefajmnog0",
+                                                    "created": 1607328568190,
+                                                    "text": "run_thread_loop(*ptr)\n执行子线程",
+                                                    "layout": null
+                                                },
+                                                "children": [
+                                                    {
+                                                        "data": {
+                                                            "id": "c7megj8uujc0",
+                                                            "created": 1607328665494,
+                                                            "text": "load_thread(*ptr)",
+                                                            "layout": null
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "data": {
+                                                                    "id": "c7mei952z4o0",
+                                                                    "created": 1607328800226,
+                                                                    "text": "load_data_detection()",
+                                                                    "layout": null
+                                                                },
+                                                                "children": []
+                                                            },
+                                                            {
+                                                                "data": {
+                                                                    "id": "c7mejld94g00",
+                                                                    "created": 1607328905205,
+                                                                    "text": "load_data_augment()",
+                                                                    "layout": null
+                                                                },
+                                                                "children": []
+                                                            },
+                                                            {
+                                                                "data": {
+                                                                    "id": "c7meil5siyo0",
+                                                                    "created": 1607328826390,
+                                                                    "text": "load_data_region()",
+                                                                    "layout": null
+                                                                },
+                                                                "children": []
+                                                            },
+                                                            {
+                                                                "data": {
+                                                                    "id": "c7meiwxmw4o0",
+                                                                    "created": 1607328852018,
+                                                                    "text": "load_image()",
+                                                                    "layout": null
+                                                                },
+                                                                "children": []
+                                                            },
+                                                            {
+                                                                "data": {
+                                                                    "id": "c7mej1o3whc0",
+                                                                    "created": 1607328862326,
+                                                                    "text": "...",
+                                                                    "layout": null
+                                                                },
+                                                                "children": []
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "c7ko7shhvhc0",
+                    "created": 1607153071515,
+                    "text": "训练模型",
+                    "layout": null,
+                    "priority": 4
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "c7mg16tkkw80",
+                            "created": 1607333105205,
+                            "text": "数据结构定义",
+                            "layout": null
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "c7mg6k86y8o0",
+                                    "created": 1607333526208,
+                                    "text": "darknet.h",
+                                    "layout": null
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "c7mg6wt1k8o0",
+                                            "created": 1607333553591,
+                                            "text": "layer类型",
+                                            "layout": null
+                                        },
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "c7mft12k4gg0",
+                            "created": 1607332465775,
+                            "text": "網絡的前向傳播和反向傳播",
+                            "layout": null
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "c7mfw59acns0",
+                                    "created": 1607332709981,
+                                    "text": "forward_network()\n逐layer前向传播",
+                                    "layout": null
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "c7mfw8w4gjs0",
+                                    "created": 1607332717893,
+                                    "text": "backward_network()\n逐layer反向传播",
+                                    "layout": null
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "c7mgi77n5t40",
+                            "created": 1607334438247,
+                            "text": "卷积层的前向传播",
+                            "layout": null
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "c7ko43sqgbc0",
+                            "created": 1607152782683,
+                            "text": "darknet.c\nmain()",
+                            "expandState": "expand",
+                            "layout": null
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "c7knvtmxud40",
+                                    "created": 1607152133651,
+                                    "text": "rnn.c\nrun_char_rnn()",
+                                    "layout": null
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "c7knvgmpbv40",
+                                    "created": 1607152105339,
+                                    "text": "classifier.c\nrun_calssfier()",
+                                    "layout": null
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "c7knuli59hk0",
+                                    "created": 1607152037583,
+                                    "text": "yolo.c\nrun_yolo()",
+                                    "layout": null
+                                },
+                                "children": []
+                            },
+                            {
+                                "data": {
+                                    "id": "c7js9hn5u6w0",
+                                    "created": 1607062929125,
+                                    "text": "detector.c\nrun_detector() ",
+                                    "expandState": "expand",
+                                    "layout_mind_offset": {
+                                        "x": -7,
+                                        "y": 7
+                                    },
+                                    "layout": null
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "c7jsavfrksg0",
+                                            "created": 1607063037516,
+                                            "text": "train_detector()",
+                                            "layout": null
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "c7mdbo133a00",
+                                                    "created": 1607325462978,
+                                                    "text": "data.c\nload_data(args)",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "data": {
+                                            "id": "c7jsbavpumw0",
+                                            "created": 1607063071133,
+                                            "text": "test_detector()",
+                                            "layout": null
+                                        },
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "template": "right",
+    "theme": "fresh-red-compat",
+    "version": "1.4.43"
+}

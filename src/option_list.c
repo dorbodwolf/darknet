@@ -66,7 +66,7 @@ int read_option(char *s, list *options)
             break;
         }
     }
-    if(i == len-1) return 0;
+    if(i == len-1) return 0; //只有key 没有val
     char *key = s;
     option_insert(options, key, val);
     return 1;

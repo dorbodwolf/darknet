@@ -41,8 +41,8 @@
 #include "gaussian_yolo_layer.h"
 
 typedef struct{
-    char *type;
-    list *options;
+    char *type; //网络类型
+    list *options; //网络参数
 }section;
 
 list *read_cfg(char *filename);
@@ -1319,6 +1319,9 @@ network parse_network_cfg(char *filename)
     return parse_network_cfg_custom(filename, 0, 0);
 }
 
+/*
+ * \return:net      返回值，network类型的变量，保存了网络结构的全部信息
+ */
 network parse_network_cfg_custom(char *filename, int batch, int time_steps)
 {
     list *sections = read_cfg(filename);
@@ -1704,31 +1707,48 @@ network parse_network_cfg_custom(char *filename, int batch, int time_steps)
 }
 
 
-
+/*
+ * 将配置内容写入sections链表中，逻辑如下：
+ * 
+ * 1）读取一个配置块，配置块的[xxx]被指向section类型的type指针；
+ *      配置块的配置行逐行插入section类型的list成员中。
+ * 2）将每个配置块对应的section逐个插入sections中
+ * 
+ * \param: filename     C风格字符数组，神经网络结构配置文件路径
+ * \return: sections    list类型的sections数组
+ * 
+ */
 list *read_cfg(char *filename)
 {
     FILE *file = fopen(filename, "r");
     if(file == 0) file_error(filename);
+    // C风格字符数组
     char *line;
+    // int类型指示器，读取文件的行号
     int nu = 0;
+    // 初始化一个list类型的sections
     list *sections = make_list();
+    // 初始化section类型的变量current
     section *current = 0;
     while((line=fgetl(file)) != 0){
-        ++ nu;
-        strip(line);
-        switch(line[0]){
-            case '[':
-                current = (section*)xmalloc(sizeof(section));
+        ++ nu; // 每读一行，行号加1
+        strip(line); // 去除行中空格
+        switch(line[0]){ // 判断每行第一个字符的值
+            case '[': // 一个section的开头
+                // 为current变量开辟一个section类型大小的内存空间
+                current = (section*)xmalloc(sizeof(section)); 
+                // 当前section被指向sections链表的一个节点
                 list_insert(sections, current);
                 current->options = make_list();
+                // 当前section的type成员赋值为[xxx]
                 current->type = line;
                 break;
             case '\0':
             case '#':
-            case ';':
+            case ';': // 读取到空行和注释行
                 free(line);
                 break;
-            default:
+            default: // 读取到[xxx]下的具体配置行，行的语法合法就封装成kvp插入current的options链表的当前节点
                 if(!read_option(line, current->options)){
                     fprintf(stderr, "Config file error line %d, could parse: %s\n", nu, line);
                     free(line);

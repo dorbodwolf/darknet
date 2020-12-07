@@ -1,11 +1,19 @@
+/*
+ * @Author: your name
+ * @Date: 2020-11-16 15:52:14
+ * @LastEditTime: 2020-12-05 15:32:07
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /darknet/src/option_list.h
+ */
 #ifndef OPTION_LIST_H
 #define OPTION_LIST_H
 #include "darknet.h"
 #include "list.h"
 
 typedef struct{
-    char *key;
-    char *val;
+    char *key; //解析后参数变量
+    char *val; //参数值
     int used;
 } kvp;
 

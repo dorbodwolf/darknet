@@ -1372,6 +1372,17 @@ void blend_images(image new_img, float alpha, image old_img, float beta)
         new_img.data[i] = new_img.data[i] * alpha + old_img.data[i] * beta;
 }
 
+/*
+ *  功能：对分配给当前线程的图片n进行数据增强，增强后图片保存到类型为data的变量d中
+ * 
+ *  参数：
+ *      n      一个线程中输入的图片张数，在线程分配时候给定的
+ *      w      （数据预处理增强后）网络输入的图片宽度，在配置文件中给定
+ *      h       ..............................高度，...............
+ *      c       ........................... 通道数，...............
+ *  返回：
+ *      d       data类型变量，图片和标签读取到d中的X和y矩阵中
+ */
 data load_data_detection(int n, char **paths, int m, int w, int h, int c, int boxes, int truth_size, int classes, int use_flip, int gaussian_noise, int use_blur, int use_mixup,
     float jitter, float resize, float hue, float saturation, float exposure, int mini_batch, int track, int augment_speed, int letter_box, int mosaic_bound, int contrastive, int contrastive_jit_flip, int contrastive_color, int show_imgs)
 {
@@ -1403,7 +1414,7 @@ data load_data_detection(int n, char **paths, int m, int w, int h, int c, int bo
     d.shallow = 0;
 
     d.X.rows = n;
-    d.X.vals = (float**)xcalloc(d.X.rows, sizeof(float*));
+    d.X.vals = (float**)xcalloc(d.X.rows, sizeof(float*)); //为存储图片的二维数组X第一维开辟内存空间
     d.X.cols = h*w*c;
 
     float r1 = 0, r2 = 0, r3 = 0, r4 = 0, r_scale;
@@ -1411,7 +1422,7 @@ data load_data_detection(int n, char **paths, int m, int w, int h, int c, int bo
     float dhue = 0, dsat = 0, dexp = 0, flip = 0;
     int augmentation_calculated = 0;
 
-    d.y = make_matrix(n, truth_size * boxes);
+    d.y = make_matrix(n, truth_size * boxes); //为存储标签信息的数组y开辟内存空间
     int i_mixup = 0;
     for (i_mixup = 0; i_mixup <= mixup; i_mixup++) {
         if (i_mixup) augmentation_calculated = 0;
@@ -1419,6 +1430,7 @@ data load_data_detection(int n, char **paths, int m, int w, int h, int c, int bo
             float *truth = (float*)xcalloc(truth_size * boxes, sizeof(float));
             char *filename = (i_mixup) ? mixup_random_paths[i] : random_paths[i];
 
+            // 读入原始图片，不限定长宽
             image orig = load_image(filename, 0, 0, c);
 
             int oh = orig.h;
@@ -1516,6 +1528,7 @@ data load_data_detection(int n, char **paths, int m, int w, int h, int c, int bo
             float dx = ((float)pleft / ow) / sx;
             float dy = ((float)ptop / oh) / sy;
 
+            // 图片resize到指定大小
             image sized = resize_image(cropped, w, h);
             if (flip) flip_image(sized);
             distort_image(sized, dhue, dsat, dexp);
@@ -1529,6 +1542,8 @@ data load_data_detection(int n, char **paths, int m, int w, int h, int c, int bo
                 //show_image(sized, "new");
                 //show_image(old_img, "old");
                 //wait_until_press_key_cv();
+
+                // 做mixup 混合系数为0.5
                 blend_images(sized, 0.5, old_img, 0.5);
                 blend_truth(truth, boxes, truth_size, d.y.vals[i]);
                 free_image(old_img);
@@ -1629,6 +1644,7 @@ static pthread_t* threads = NULL;
 
 pthread_mutex_t mtx_load_data = PTHREAD_MUTEX_INITIALIZER;
 
+// 分配线程
 void *run_thread_loop(void *ptr)
 {
     const int i = *(int *)ptr;
@@ -1661,11 +1677,11 @@ void *load_threads(void *ptr)
     int i;
     load_args args = *(load_args *)ptr;
     if (args.threads == 0) args.threads = 1;
-    data *out = args.d;
-    int total = args.n;
-    free(ptr);
+    data *out = args.d; // data类型的变量out，与图片数据args.d指向同一块内存
+    int total = args.n; //图片个数
+    free(ptr); // ptr归还所指内存块的使用权，成为一个“野指针”
     data* buffers = (data*)xcalloc(args.threads, sizeof(data));
-    if (!threads) {
+    if (!threads) { //创建多个cpu线程来加载数据
         threads = (pthread_t*)xcalloc(args.threads, sizeof(pthread_t));
         run_load_data = (volatile int *)xcalloc(args.threads, sizeof(int));
         args_swap = (load_args *)xcalloc(args.threads, sizeof(load_args));
@@ -1680,13 +1696,15 @@ void *load_threads(void *ptr)
 
     for (i = 0; i < args.threads; ++i) {
         args.d = buffers + i;
+        // 巧妙的写法。保证图片总张数total和线程数threads不能整除情况下各个线程图片数的分配。
+        // 比如：61张图片，8个线程各自读入的照片张数分别为：7, 8, 7, 8, 8, 7, 8, 8
         args.n = (i + 1) * total / args.threads - i * total / args.threads;
 
         pthread_mutex_lock(&mtx_load_data);
         args_swap[i] = args;
         pthread_mutex_unlock(&mtx_load_data);
 
-        custom_atomic_store_int(&run_load_data[i], 1);  // run thread
+        custom_atomic_store_int(&run_load_data[i], 1);  // run thread 运行线程
     }
     for (i = 0; i < args.threads; ++i) {
         while (custom_atomic_load_int(&run_load_data[i])) this_thread_sleep_for(thread_wait_ms); //   join
@@ -1704,12 +1722,16 @@ void *load_threads(void *ptr)
     }
     */
 
-    *out = concat_datas(buffers, args.threads);
+    // 所有的线程读取完成后，将各个buffer中的数据合并成一个大数组到out所指内存块，
+    // 至此一个完整的数据读取过程形成闭环
+    *out = concat_datas(buffers, args.threads); 
+    // 把out的shallow设为0
     out->shallow = 0;
     for(i = 0; i < args.threads; ++i){
         buffers[i].shallow = 1;
         free_data(buffers[i]);
     }
+    // 释放资源
     free(buffers);
     //free(threads);
     return 0;
@@ -1722,6 +1744,14 @@ void free_load_threads(void *ptr)
     int i;
     if (threads) {
         custom_atomic_store_int(&flag_exit, 1);
+        /*
+         * 以for循环调用pthread_join，实现阻塞方式的线程执行
+         * 
+         * 母线程等待所有子线程调用结束，保证创建的线程都可以被调用
+         * 
+         * 实际上这种调用方式主线程在threads[0]处也就是第一个线程处就挂起了；
+         * 主线程等待第一个线程调用结束再查看其他线程是否完成调用，如果完成调用就收回其资源
+         */
         for (i = 0; i < args.threads; ++i) {
             pthread_join(threads[i], 0);
         }

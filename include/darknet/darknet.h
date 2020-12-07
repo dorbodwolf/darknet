@@ -215,10 +215,10 @@ typedef struct update_args {
 
 // layer.h
 struct layer {
-    LAYER_TYPE type; // 枚举变量enum，网络类型
-    ACTIVATION activation; //enum，激活函数类型
-    ACTIVATION lstm_activation; 
-    COST_TYPE cost_type; //损失函数类型，如L1 loss
+    LAYER_TYPE type;
+    ACTIVATION activation;
+    ACTIVATION lstm_activation;
+    COST_TYPE cost_type;
     void(*forward)   (struct layer, struct network_state);
     void(*backward)  (struct layer, struct network_state);
     void(*update)    (struct layer, int, float, float, float);
@@ -228,9 +228,9 @@ struct layer {
     layer *share_layer;
     int train;
     int avgpool;
-    int batch_normalize; // 是否进行BN，是为1
+    int batch_normalize;
     int shortcut;
-    int batch; // 一个batch中图片的张数
+    int batch;
     int dynamic_minibatch;
     int forced;
     int flipped;
@@ -243,21 +243,21 @@ struct layer {
     int truths;
     int h, w, c;
     int out_h, out_w, out_c;
-    int n; //对于卷积层，该参数表示卷积核的个数
+    int n;
     int max_boxes;
     int truth_size;
     int groups;
     int group_id;
-    int size; //核尺寸，如卷积核、池化核
+    int size;
     int side;
-    int stride; // 滑动步长，如卷积核的滑动步长
+    int stride;
     int stride_x;
     int stride_y;
     int dilation;
     int antialiasing;
     int maxpool_depth;
     int maxpool_zero_nonmax;
-    int out_channels; //输出通道数
+    int out_channels;
     float reverse;
     int coordconv;
     int flatten;
@@ -364,7 +364,7 @@ struct layer {
     int numload;
 
     float temperature;
-    float probability; // dropout的概率
+    float probability;
     float dropblock_size_rel;
     int dropblock_size_abs;
     int dropblock;
@@ -414,7 +414,7 @@ struct layer {
     float *scales;
     float *scale_updates;
 
-    float *weights; //当前层所有权重系数
+    float *weights;
     float *weight_updates;
 
     float scale_x_y;

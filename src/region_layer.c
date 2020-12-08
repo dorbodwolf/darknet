@@ -93,6 +93,9 @@ box get_region_box(float *x, float *biases, int n, int index, int i, int j, int 
     return b;
 }
 
+/**
+ * 坐標值損失函數反向傳播
+*/
 float delta_region_box(box truth, float *x, float *biases, int n, int index, int i, int j, int w, int h, float *delta, float scale)
 {
     box pred = get_region_box(x, biases, n, index, i, j, w, h);
@@ -114,6 +117,9 @@ float delta_region_box(box truth, float *x, float *biases, int n, int index, int
     return iou;
 }
 
+/**
+ * 類別概率損失函數反向傳播
+*/
 void delta_region_class(float *output, float *delta, int index, int class_id, int classes, tree *hier, float scale, float *avg_cat, int focal_loss)
 {
     int i, n;
@@ -133,7 +139,7 @@ void delta_region_class(float *output, float *delta, int index, int class_id, in
         *avg_cat += pred;
     } else {
         // Focal loss
-        if (focal_loss) {
+        if (focal_loss) { // focal loss反向求導
             // Focal Loss
             float alpha = 0.5;    // 0.25 or 0.5
             //float gamma = 2;    // hardcoded in many places of the grad-formula
@@ -180,6 +186,10 @@ static int entry_index(layer l, int batch, int location, int entry)
 }
 
 void softmax_tree(float *input, int batch, int inputs, float temp, tree *hierarchy, float *output);
+
+/**
+ * 前向推理計算
+*/
 void forward_region_layer(const region_layer l, network_state state)
 {
     int i,j,b,t,n;

@@ -10,23 +10,34 @@
 #include <string.h>
 #include <stdlib.h>
 
+/**
+ * 构建YOLOv1最后一层——detection层
+ * @param batch 
+ * @param inputs 输入层神经元个数
+ * @param n 见下
+ * @param side 见下
+ * @param classes 见下
+ * @param coords 见下
+ * @param rescore
+ * @return 构建好的yolov1 detection层
+ */
 detection_layer make_detection_layer(int batch, int inputs, int n, int side, int classes, int coords, int rescore)
 {
     detection_layer l = { (LAYER_TYPE)0 };
     l.type = DETECTION;
 
-    l.n = n;
+    l.n = n; //一个格栅预测的bbox个数，实验设置2
     l.batch = batch;
-    l.inputs = inputs;
-    l.classes = classes;
-    l.coords = coords;
+    l.inputs = inputs; 
+    l.classes = classes; //类别数,coco为20
+    l.coords = coords; // 一个bbox包含的坐标数量，xywh
     l.rescore = rescore;
-    l.side = side;
+    l.side = side; //格栅个数7*7
     l.w = side;
     l.h = side;
-    assert(side*side*((1 + l.coords)*l.n + l.classes) == inputs);
+    assert(side*side*((1 + l.coords)*l.n + l.classes) == inputs); // 7*7*(5*2+20) == 7*7*30 每个格栅包含30个参数
     l.cost = (float*)xcalloc(1, sizeof(float));
-    l.outputs = l.inputs;
+    l.outputs = l.inputs; // detection层不改变输入输出大小
     l.truths = l.side*l.side*(1+l.coords+l.classes);
     l.output = (float*)xcalloc(batch * l.outputs, sizeof(float));
     l.delta = (float*)xcalloc(batch * l.outputs, sizeof(float));
@@ -46,14 +57,19 @@ detection_layer make_detection_layer(int batch, int inputs, int n, int side, int
     return l;
 }
 
+/**
+ * yolo v1层的前向传播计算业务代码
+ * @param l
+ * @param state
+ */
 void forward_detection_layer(const detection_layer l, network_state state)
 {
-    int locations = l.side*l.side;
+    int locations = l.side*l.side; // 格栅中cell数量
     int i,j;
     memcpy(l.output, state.input, l.outputs*l.batch*sizeof(float));
     //if(l.reorg) reorg(l.output, l.w*l.h, size*l.n, l.batch, 1);
     int b;
-    if (l.softmax){
+    if (l.softmax){ // yolo v1配置文件中該參數為0，所以不會執行
         for(b = 0; b < l.batch; ++b){
             int index = b*l.inputs;
             for (i = 0; i < locations; ++i) {
@@ -70,18 +86,19 @@ void forward_detection_layer(const detection_layer l, network_state state)
         float avg_obj = 0;
         float avg_anyobj = 0;
         int count = 0;
-        *(l.cost) = 0;
-        int size = l.inputs * l.batch;
-        memset(l.delta, 0, size * sizeof(float));
-        for (b = 0; b < l.batch; ++b){
-            int index = b*l.inputs;
-            for (i = 0; i < locations; ++i) {
-                int truth_index = (b*locations + i)*(1+l.coords+l.classes);
-                int is_obj = state.truth[truth_index];
-                for (j = 0; j < l.n; ++j) {
-                    int p_index = index + locations*l.classes + i*l.n + j;
+        *(l.cost) = 0; // detection層的縂損失
+        int size = l.inputs * l.batch; // 輸入所有batch的參數規模
+        memset(l.delta, 0, size * sizeof(float)); // 參數初始化為0
+        for (b = 0; b < l.batch; ++b){ // 每張輸入特徵圖
+            int index = b*l.inputs; // 每張圖片在所有參數中的索引位置
+            for (i = 0; i < locations; ++i) { // 每個cell
+                int truth_index = (b*locations + i)*(1+l.coords+l.classes); // 當前格柵的groud truth
+                int is_obj = state.truth[truth_index]; //當前格柵在GT中是否有對象
+                // 當前格柵noobj confidence損失
+                for (j = 0; j < l.n; ++j) { // 每個預測bbox
+                    int p_index = index + locations*l.classes + i*l.n + j; // 當前bbox在參數中的索引位置
                     l.delta[p_index] = l.noobject_scale*(0 - l.output[p_index]);
-                    *(l.cost) += l.noobject_scale*pow(l.output[p_index], 2);
+                    *(l.cost) += l.noobject_scale*pow(l.output[p_index], 2); // yolo v1損失函數公式第四項，不包含目標的confidence誤差，配置文件noobject_scale=0.5
                     avg_anyobj += l.output[p_index];
                 }
 
@@ -93,32 +110,36 @@ void forward_detection_layer(const detection_layer l, network_state state)
                     continue;
                 }
 
-                int class_index = index + i*l.classes;
+                // 當前格柵classification損失
+                int class_index = index + i*l.classes; // 當前格柵類別參數索引位置
                 for(j = 0; j < l.classes; ++j) {
                     l.delta[class_index+j] = l.class_scale * (state.truth[truth_index+1+j] - l.output[class_index+j]);
-                    *(l.cost) += l.class_scale * pow(state.truth[truth_index+1+j] - l.output[class_index+j], 2);
+                    *(l.cost) += l.class_scale * pow(state.truth[truth_index+1+j] - l.output[class_index+j], 2); // yolov1損失函數第5項，類別誤差， 配置文件class_scale=1
                     if(state.truth[truth_index + 1 + j]) avg_cat += l.output[class_index+j];
                     avg_allcat += l.output[class_index+j];
                 }
 
+                // 當前格柵的GT bbox coords值
                 box truth = float_to_box(state.truth + truth_index + 1 + l.classes);
                 truth.x /= l.side;
                 truth.y /= l.side;
 
                 for(j = 0; j < l.n; ++j){
                     int box_index = index + locations*(l.classes + l.n) + (i*l.n + j) * l.coords;
-                    box out = float_to_box(l.output + box_index);
+                    box out = float_to_box(l.output + box_index); //當前bbox預測coords
                     out.x /= l.side;
                     out.y /= l.side;
 
-                    if (l.sqrt){
+                    if (l.sqrt){ // 
                         out.w = out.w*out.w;
                         out.h = out.h*out.h;
                     }
 
-                    float iou  = box_iou(out, truth);
+                    float iou  = box_iou(out, truth); // 預測bbox和GT的IoU
                     //iou = 0;
-                    float rmse = box_rmse(out, truth);
+                    float rmse = box_rmse(out, truth); // rmse
+                    
+                    // 找到當前格柵預測最好的bbox
                     if(best_iou > 0 || iou > 0){
                         if(iou > best_iou){
                             best_iou = iou;
@@ -146,6 +167,7 @@ void forward_detection_layer(const detection_layer l, network_state state)
                 int box_index = index + locations*(l.classes + l.n) + (i*l.n + best_index) * l.coords;
                 int tbox_index = truth_index + 1 + l.classes;
 
+                // 當前格柵的最佳bbox
                 box out = float_to_box(l.output + box_index);
                 out.x /= l.side;
                 out.y /= l.side;
@@ -153,29 +175,31 @@ void forward_detection_layer(const detection_layer l, network_state state)
                     out.w = out.w*out.w;
                     out.h = out.h*out.h;
                 }
-                float iou  = box_iou(out, truth);
+                float iou  = box_iou(out, truth); //當前格柵最佳bbox和GD的iou
 
                 //printf("%d,", best_index);
                 int p_index = index + locations*l.classes + i*l.n + best_index;
-                *(l.cost) -= l.noobject_scale * pow(l.output[p_index], 2);
-                *(l.cost) += l.object_scale * pow(1-l.output[p_index], 2);
+                *(l.cost) -= l.noobject_scale * pow(l.output[p_index], 2); //減去noobj confidence loss
+                *(l.cost) += l.object_scale * pow(1-l.output[p_index], 2); //加上obj confidence loss
                 avg_obj += l.output[p_index];
+                // 當前格柵預測bbox的confidence誤差項
                 l.delta[p_index] = l.object_scale * (1.-l.output[p_index]);
 
                 if(l.rescore){
                     l.delta[p_index] = l.object_scale * (iou - l.output[p_index]);
                 }
 
+                // 當前格柵預測bbox的coords誤差項
                 l.delta[box_index+0] = l.coord_scale*(state.truth[tbox_index + 0] - l.output[box_index + 0]);
                 l.delta[box_index+1] = l.coord_scale*(state.truth[tbox_index + 1] - l.output[box_index + 1]);
                 l.delta[box_index+2] = l.coord_scale*(state.truth[tbox_index + 2] - l.output[box_index + 2]);
                 l.delta[box_index+3] = l.coord_scale*(state.truth[tbox_index + 3] - l.output[box_index + 3]);
-                if(l.sqrt){
+                if(l.sqrt){ // w和h平方根方式計算誤差來準確度量小目標的誤差
                     l.delta[box_index+2] = l.coord_scale*(sqrt(state.truth[tbox_index + 2]) - l.output[box_index + 2]);
                     l.delta[box_index+3] = l.coord_scale*(sqrt(state.truth[tbox_index + 3]) - l.output[box_index + 3]);
                 }
 
-                *(l.cost) += pow(1-iou, 2);
+                *(l.cost) += pow(1-iou, 2); // 
                 avg_iou += iou;
                 ++count;
             }
@@ -207,7 +231,7 @@ void forward_detection_layer(const detection_layer l, network_state state)
             free(costs);
         }
 
-
+        // 一個輸入batch總的損失
         *(l.cost) = pow(mag_array(l.delta, l.outputs * l.batch), 2);
 
 
@@ -216,11 +240,23 @@ void forward_detection_layer(const detection_layer l, network_state state)
     }
 }
 
+/**
+ * 完成一個batch的反向傳播，更新參數
+*/
 void backward_detection_layer(const detection_layer l, network_state state)
 {
     axpy_cpu(l.batch*l.inputs, 1, l.delta, 1, state.delta, 1);
 }
 
+
+/**
+ * 推理階段
+ * @param w 輸入圖片寬
+ * @param h 輸入圖片高
+ * @param thresh confidence閾值
+ * @param probs 裝載預測結果概率值
+ * @param boxes 裝載預測結果coords
+*/
 void get_detection_boxes(layer l, int w, int h, float thresh, float **probs, box *boxes, int only_objectness)
 {
     int i,j,n;
@@ -240,11 +276,11 @@ void get_detection_boxes(layer l, int w, int h, float thresh, float **probs, box
             boxes[index].h = pow(predictions[box_index + 3], (l.sqrt?2:1)) * h;
             for(j = 0; j < l.classes; ++j){
                 int class_index = i*l.classes;
-                float prob = scale*predictions[class_index+j];
-                probs[index][j] = (prob > thresh) ? prob : 0;
+                float prob = scale*predictions[class_index+j]; // 考慮類別的confidence概率
+                probs[index][j] = (prob > thresh) ? prob : 0; //confidence閾值濾除
             }
             if(only_objectness){
-                probs[index][0] = scale;
+                probs[index][0] = scale; // 不包含類別信息的預測confidence概率
             }
         }
     }
@@ -284,6 +320,8 @@ void backward_detection_layer_gpu(detection_layer l, network_state state)
     //copy_ongpu(l.batch*l.inputs, l.delta_gpu, 1, state.delta, 1);
 }
 #endif
+
+
 
 void get_detection_detections(layer l, int w, int h, float thresh, detection *dets)
 {

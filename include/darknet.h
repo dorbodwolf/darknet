@@ -243,7 +243,7 @@ struct layer {
     int truths;
     int h, w, c;
     int out_h, out_w, out_c;
-    int n; //对于卷积层，该参数表示卷积核的个数
+    int n; //对于卷积层，该参数表示卷积核的个数；对于yolov1，表示一个格栅中预测bbox的个数
     int max_boxes;
     int truth_size;
     int groups;

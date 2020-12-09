@@ -501,21 +501,31 @@
                         "children": [
                             {
                                 "data": {
-                                    "id": "c7mfw59acns0",
-                                    "created": 1607332709981,
-                                    "text": "forward_network()\n逐layer前向传播",
-                                    "layout": null
+                                    "id": "c7n82bz7tpc0",
+                                    "created": 1607412185872,
+                                    "text": "network.c",
+                                    "expandState": "expand"
                                 },
-                                "children": []
-                            },
-                            {
-                                "data": {
-                                    "id": "c7mfw8w4gjs0",
-                                    "created": 1607332717893,
-                                    "text": "backward_network()\n逐layer反向传播",
-                                    "layout": null
-                                },
-                                "children": []
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "c7mfw59acns0",
+                                            "created": 1607332709981,
+                                            "text": "forward_network()\n逐layer前向传播",
+                                            "layout": null
+                                        },
+                                        "children": []
+                                    },
+                                    {
+                                        "data": {
+                                            "id": "c7mfw8w4gjs0",
+                                            "created": 1607332717893,
+                                            "text": "backward_network()\n逐layer反向传播",
+                                            "layout": null
+                                        },
+                                        "children": []
+                                    }
+                                ]
                             }
                         ]
                     },
@@ -524,9 +534,201 @@
                             "id": "c7mgi77n5t40",
                             "created": 1607334438247,
                             "text": "卷积层的前向传播",
-                            "layout": null
+                            "layout": null,
+                            "progress": 1
                         },
                         "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "c7mzmfhnd1s0",
+                            "created": 1607388370811,
+                            "text": "卷积层的反向传播",
+                            "progress": 1
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "c7mzmxo9i5s0",
+                            "created": 1607388410393,
+                            "text": "YOLOv1损失函数"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "c7n82oqcyqg0",
+                                    "created": 1607412213635,
+                                    "text": "detection_layer.c"
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "c7n835fzuk00",
+                                            "created": 1607412250013,
+                                            "text": "make_detection_layer()"
+                                        },
+                                        "children": []
+                                    },
+                                    {
+                                        "data": {
+                                            "id": "c7n8399k4cg0",
+                                            "created": 1607412258331,
+                                            "text": "forward_detection_layer()"
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "c7n9otybqvk0",
+                                                    "created": 1607416770122,
+                                                    "text": "完成一個batch的前向推理和損失計算\n反向求導應該也在這個函數裏面（delta），注釋的可能有錯誤"
+                                                },
+                                                "children": []
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "data": {
+                                            "id": "c7nad5etfgg0",
+                                            "created": 1607418675804,
+                                            "text": "get_detection_boxes()"
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "c7nad9osl800",
+                                                    "created": 1607418685114,
+                                                    "text": "推理"
+                                                },
+                                                "children": []
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "c7nadlwbbnk0",
+                            "created": 1607418711690,
+                            "text": "YOLOv2損失函數"
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "c7naqlv26600",
+                                    "created": 1607419730348,
+                                    "text": "region_layer.c"
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "c7nauro2yio0",
+                                            "created": 1607420056444,
+                                            "text": "forward_region_layer()"
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "c7nav5w8akw0",
+                                                    "created": 1607420087411,
+                                                    "text": "delta_region_box()"
+                                                },
+                                                "children": []
+                                            },
+                                            {
+                                                "data": {
+                                                    "id": "c7nav9upwg00",
+                                                    "created": 1607420096027,
+                                                    "text": "delta_region_class()\n包括了local loss的反向求導",
+                                                    "layout": null
+                                                },
+                                                "children": []
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "c7nayts0ugw0",
+                            "created": 1607420374492,
+                            "text": "YOLOv3損失函數",
+                            "progress": 2
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "c7naz0sanco0",
+                                    "created": 1607420389746,
+                                    "text": "yolo_layer.c"
+                                },
+                                "children": [
+                                    {
+                                        "data": {
+                                            "id": "c7naz7cq1h40",
+                                            "created": 1607420404042,
+                                            "text": "前向傳播"
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "c7nazl08z4w0",
+                                                    "created": 1607420433763,
+                                                    "text": "forward_yolo_layer()"
+                                                },
+                                                "children": []
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "data": {
+                                            "id": "c7nazatrehc0",
+                                            "created": 1607420411603,
+                                            "text": "梯度求解"
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "c7nb0d7zv3k0",
+                                                    "created": 1607420495181,
+                                                    "text": "delta_yolo_box()"
+                                                },
+                                                "children": []
+                                            },
+                                            {
+                                                "data": {
+                                                    "id": "c7nb0mc5lp40",
+                                                    "created": 1607420515024,
+                                                    "text": "delta_yolo_class()"
+                                                },
+                                                "children": []
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "data": {
+                                            "id": "c7nazctuz1c0",
+                                            "created": 1607420415962,
+                                            "text": "誤差反向傳播"
+                                        },
+                                        "children": [
+                                            {
+                                                "data": {
+                                                    "id": "c7nb1b2mbwo0",
+                                                    "created": 1607420568867,
+                                                    "text": "backward_yolo_layer()"
+                                                },
+                                                "children": []
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
                     },
                     {
                         "data": {

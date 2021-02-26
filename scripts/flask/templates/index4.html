@@ -1,0 +1,35 @@
+<!--
+ * @Author: Qinlei
+ * @LastEditors: Qinlei
+ * @Description:  
+ * @Date: 2021-02-25 08:44:31
+ * @LastEditTime: 2021-02-25 10:08:11
+ * @FilePath: /yolov5-master/tools/flask/templates/index.html
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<title>TEMP</title>
+</head>
+
+<body>
+    <!-- <a class="btn btn-success myButton" href="#" role="button" onclick="predict()">predict</a> -->
+    <input type="button" value="微笑"  onclick="predict()"/>
+	<p id="display">{{ temp }}</p>
+    <p id="display">{{ temp }}</p>
+</body>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript">
+
+    function predict() {
+        $.ajax({
+            url: "/predict",
+            type: "post",
+            
+            success: function(data) {
+                $('#result').text(' Predicted Output: '+data);
+                console.log(data);
+            }
+        });
+    }
+</script>

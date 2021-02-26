@@ -1,0 +1,110 @@
+{
+    "version": "4.5.5",
+    "flags": {},
+    "shapes": [
+        {
+            "label": "car",
+            "line_color": null,
+            "fill_color": null,
+            "points": [
+                [
+                    283.0,
+                    5.0
+                ],
+                [
+                    303.0,
+                    5.0
+                ],
+                [
+                    303.0,
+                    21.0
+                ],
+                [
+                    283.0,
+                    21.0
+                ]
+            ],
+            "shape_type": "polygon",
+            "flags": {},
+            "area": -1,
+            "bbox": [
+                283.0,
+                5.0,
+                20.0,
+                16.0
+            ],
+            "segmentation": [
+                [
+                    283.0,
+                    5.0,
+                    303.0,
+                    5.0,
+                    303.0,
+                    21.0,
+                    283.0,
+                    21.0
+                ]
+            ]
+        },
+        {
+            "label": "car",
+            "line_color": null,
+            "fill_color": null,
+            "points": [
+                [
+                    296.0,
+                    104.0
+                ],
+                [
+                    315.0,
+                    104.0
+                ],
+                [
+                    315.0,
+                    120.0
+                ],
+                [
+                    296.0,
+                    120.0
+                ]
+            ],
+            "shape_type": "polygon",
+            "flags": {},
+            "area": -1,
+            "bbox": [
+                296.0,
+                104.0,
+                19.0,
+                16.0
+            ],
+            "segmentation": [
+                [
+                    296.0,
+                    104.0,
+                    315.0,
+                    104.0,
+                    315.0,
+                    120.0,
+                    296.0,
+                    120.0
+                ]
+            ]
+        }
+    ],
+    "lineColor": [
+        0,
+        255,
+        0,
+        128
+    ],
+    "fillColor": [
+        255,
+        0,
+        0,
+        128
+    ],
+    "imagePath": "F:\\2021\\3\u2014\u2014\u7b97\u6cd5\u7814\u7a76\\\u8f66\u8f86\u68c0\u6d4b\\1\u2014\u963f\u5e03\u624e\u6bd4\u8f66\u8f86\\labelme\\img\\GOOGLE_mosaic_clip_512_2144.png",
+    "imageData": "",
+    "imageHeight": 512,
+    "imageWidth": 512
+}

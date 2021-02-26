@@ -1,0 +1,5 @@
+classes = 2
+train  = data_cars/train.txt
+valid  = data_cars/valid.txt
+names = data_cars/obj.names
+backup = data_cars/backup

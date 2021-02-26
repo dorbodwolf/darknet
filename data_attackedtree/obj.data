@@ -1,0 +1,5 @@
+classes = 1
+train  = data_attackedtree/train.txt
+valid  = data_attackedtree/valid.txt
+names = data_attackedtree/obj.names
+backup = data_attackedtree/backup

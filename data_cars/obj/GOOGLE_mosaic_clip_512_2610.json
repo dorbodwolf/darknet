@@ -1,0 +1,154 @@
+{
+    "version": "4.5.5",
+    "flags": {},
+    "shapes": [
+        {
+            "label": "car",
+            "line_color": null,
+            "fill_color": null,
+            "points": [
+                [
+                    257.0,
+                    403.0
+                ],
+                [
+                    275.0,
+                    403.0
+                ],
+                [
+                    275.0,
+                    421.0
+                ],
+                [
+                    257.0,
+                    421.0
+                ]
+            ],
+            "shape_type": "polygon",
+            "flags": {},
+            "area": -1,
+            "bbox": [
+                257.0,
+                403.0,
+                18.0,
+                18.0
+            ],
+            "segmentation": [
+                [
+                    257.0,
+                    403.0,
+                    275.0,
+                    403.0,
+                    275.0,
+                    421.0,
+                    257.0,
+                    421.0
+                ]
+            ]
+        },
+        {
+            "label": "car",
+            "line_color": null,
+            "fill_color": null,
+            "points": [
+                [
+                    341.0,
+                    8.0
+                ],
+                [
+                    358.0,
+                    8.0
+                ],
+                [
+                    358.0,
+                    28.0
+                ],
+                [
+                    341.0,
+                    28.0
+                ]
+            ],
+            "shape_type": "polygon",
+            "flags": {},
+            "area": -1,
+            "bbox": [
+                341.0,
+                8.0,
+                17.0,
+                20.0
+            ],
+            "segmentation": [
+                [
+                    341.0,
+                    8.0,
+                    358.0,
+                    8.0,
+                    358.0,
+                    28.0,
+                    341.0,
+                    28.0
+                ]
+            ]
+        },
+        {
+            "label": "car",
+            "line_color": null,
+            "fill_color": null,
+            "points": [
+                [
+                    66.0,
+                    291.0
+                ],
+                [
+                    83.0,
+                    291.0
+                ],
+                [
+                    83.0,
+                    309.0
+                ],
+                [
+                    66.0,
+                    309.0
+                ]
+            ],
+            "shape_type": "polygon",
+            "flags": {},
+            "area": -1,
+            "bbox": [
+                66.0,
+                291.0,
+                17.0,
+                18.0
+            ],
+            "segmentation": [
+                [
+                    66.0,
+                    291.0,
+                    83.0,
+                    291.0,
+                    83.0,
+                    309.0,
+                    66.0,
+                    309.0
+                ]
+            ]
+        }
+    ],
+    "lineColor": [
+        0,
+        255,
+        0,
+        128
+    ],
+    "fillColor": [
+        255,
+        0,
+        0,
+        128
+    ],
+    "imagePath": "F:\\2021\\3\u2014\u2014\u7b97\u6cd5\u7814\u7a76\\\u8f66\u8f86\u68c0\u6d4b\\1\u2014\u963f\u5e03\u624e\u6bd4\u8f66\u8f86\\labelme\\img\\GOOGLE_mosaic_clip_512_2610.png",
+    "imageData": "",
+    "imageHeight": 512,
+    "imageWidth": 512
+}
